@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   SafeAreaView,
@@ -22,17 +22,23 @@ import {
 
 const App = () => {
 
-  const [session, setSession] = useState({number:0, howManyTimes: 0});
+  const [session, setSession] = useState({ number: 0, howManyTimes: 0 });
 
   const onClickHandler = () => {
-    setSession({number: session.number + 5, howManyTimes: session.howManyTimes + 1});
+    setSession({ number: session.number + 5, howManyTimes: session.howManyTimes + 1 });
   }
 
   return (
     <View style={styles.body}>
-      <Text style={styles.text}>{session.number}</Text>
-      <Button title='Update State' onPress={onClickHandler}></Button>
-      <Text style={styles.text}>You Clicked {session.howManyTimes} times</Text>
+      <View style={styles.view1}>
+        <Text style={styles.text}>1</Text>
+      </View>
+      <View style={styles.view1}>
+        <Text style={styles.text}>2</Text>
+      </View>
+      <View style={styles.view1}>
+        <Text style={styles.text}>3</Text>
+      </View>
     </View>
   );
 };
@@ -40,21 +46,24 @@ const App = () => {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#000fff',
+    flexDirection: 'column-reverse',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 10,
-    borderColor: '#00f000',
-    borderRadius: 10,
-    margin: 40,
+  },
+  view1: {
+    width: 100,
+    height: 100,
+    backgroundColor: '#ff0000',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
-    color: '#fff',
-    fontSize: 20,
+    color: '#000000',
+    fontSize: 40,
     fontStyle: 'italic',
     margin: 10,
-    textTransform: 'uppercase',
-  } 
+  }
 });
 
 export default App;
