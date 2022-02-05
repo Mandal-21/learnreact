@@ -1,14 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-/* this is comment*/
-
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Button,
   SafeAreaView,
@@ -32,10 +22,17 @@ import {
 
 const App = () => {
 
+  const [session, setSession] = useState({number:0, howManyTimes: 0});
+
+  const onClickHandler = () => {
+    setSession({number: session.number + 5, howManyTimes: session.howManyTimes + 1});
+  }
+
   return (
     <View style={styles.body}>
-      <Text style={styles.text}>Hello, Amar</Text>
-      <Button title='Youtube Vlog' onPress={()=>{Linking.openURL('https://www.youtube.com/c/AmarMandalVlogs')}}></Button>
+      <Text style={styles.text}>{session.number}</Text>
+      <Button title='Update State' onPress={onClickHandler}></Button>
+      <Text style={styles.text}>You Clicked {session.howManyTimes} times</Text>
     </View>
   );
 };
@@ -46,12 +43,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#000fff',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 10,
+    borderColor: '#00f000',
+    borderRadius: 10,
+    margin: 40,
   },
   text: {
     color: '#fff',
     fontSize: 20,
     fontStyle: 'italic',
     margin: 10,
+    textTransform: 'uppercase',
   } 
 });
 
