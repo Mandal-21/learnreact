@@ -9,6 +9,7 @@ import {
   useColorScheme,
   View,
   Linking,
+  RefreshControl,
 } from 'react-native';
 
 
@@ -30,22 +31,38 @@ const App = () => {
     { 'key': 13, 'item': 0 },
   ]);
 
+  const [Refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setItems([...items, { 'key': 41, 'item': 34 }]);
+    setRefreshing(false);
+  };
+
   return (
-    <View style={styles.body}>
 
-      <ScrollView>
-        {
-          items.map((i) => {
-            return (
-              <View style={styles.item} key={i.key}>
-                <Text style={styles.text}>Item {i.item}</Text>
-              </View>
-            )
-          })
-        }
-      </ScrollView>
+    <ScrollView
+      horizontal={false}
+      style={styles.body}
+      refreshControl={
+        <RefreshControl
+          refreshing={Refreshing}
+          onRefresh={onRefresh}
+          colors={['#0e2']}
+        />
+      }
+    >
+      {
+        items.map((i) => {
+          return (
+            <View style={styles.item} key={i.key}>
+              <Text style={styles.text}>Item {i.item}</Text>
+            </View>
+          )
+        })
+      }
+    </ScrollView>
 
-    </View>
   );
 };
 
