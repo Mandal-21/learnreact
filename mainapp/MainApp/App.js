@@ -12,107 +12,49 @@ import {
   RefreshControl,
   FlatList,
   SectionList,
+  TextInput,
+  TouchableOpacity,
 } from 'react-native';
 
 
 
 const App = () => {
 
-  const [items, setItems] = useState([
-    { 'name': '1' },
-    { 'name': '2' },
-    { 'name': '3' },
-    { 'name': '4' },
-    { 'name': '5' },
-    { 'name': '6' },
-    { 'name': '7' },
-    { 'name': '8' },
-    { 'name': '95' },
-    { 'name': '10' },
-    { 'name': '67' },
-    { 'name': '0' },
-  ]);
+  const [name, setname] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-  const [DATA, setDATA] = useState([
-    {
-      title: 'Title 1',
-      data: ['Item 1-1', 'Item 1-2'],
-    },
-  ])
-
-  const [Refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    const adding_index = DATA.length + 1;
-    setDATA([...DATA, { title: 'Title ' + adding_index.toString(), data: ['Item ' + adding_index.toString() + '-1', 'Item ' + adding_index.toString() + '-2'] }]);
-    setRefreshing(false);
-  };
+  const onClickHandler = () => {
+    setSubmitted(!submitted);
+  }
 
   return (
 
-    <SectionList
-      keyExtractor={(item, index) => index.toString()}
-      sections={DATA}
-      renderItem={({ item }) =>
-        <View style={styles.item}>
-          <Text style={styles.text_item}>{item}</Text>
-        </View >
-      }
-      renderSectionHeader={({ section }) => (
-        <View style={styles.header}>
-          <Text style={styles.text_header}>{section.title}</Text>
-        </View>
-      )}
-      refreshControl={
-        <RefreshControl
-          refreshing={Refreshing}
-          onRefresh={onRefresh}
-          colors={['#0e2']}
-        />
-      }
-    />
-
-    // <FlatList
-    //   // numColumns={4}
-    //   horizontal={true}
-    //   keyExtractor={(item, index) => index.toString()}
-    //   data={items}
-    //   renderItem={({ item }) => (
-    //     <View style={styles.item}>
-    //       <Text style={styles.text}>Item {item.name}</Text>
-    //     </View>
-    //   )}
-    //   refreshControl={
-    //     <RefreshControl
-    //       refreshing={Refreshing}
-    //       onRefresh={onRefresh}
-    //       colors={['#0e2']}
-    //     />
-    //   }
-    // />
-
-    // <ScrollView
-    //   horizontal={false}
-    //   style={styles.body}
-    //   refreshControl={
-    //     <RefreshControl
-    //       refreshing={Refreshing}
-    //       onRefresh={onRefresh}
-    //       colors={['#0e2']}
-    //     />
-    //   }
-    // >
-    //   {
-    //     items.map((i) => {
-    //       return (
-    //         <View style={styles.item} key={i.key}>
-    //           <Text style={styles.text}>Item {i.item}</Text>
-    //         </View>
-    //       )
-    //     })
-    //   }
-    // </ScrollView>
+    <View style={styles.body}>
+      <Text style={styles.text}>Enter your Name:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="e.g. Amar"
+        maxLength={20}
+        onChangeText={(text) => { setname(text) }}
+      // keyboardType='phone-pad'
+      // editable={false}
+      // secureTextEntry={true}
+      />
+      {/* <Button
+        title={submitted ? 'Clear' : 'Submit'}
+        onPress={onClickHandler}
+        color='#008080'
+      /> */}
+      <TouchableOpacity
+      style={styles.button}
+      onPress={onClickHandler}
+      >
+        <Text style={styles.text}>
+          {submitted ? 'Clear' : 'Submit'}
+        </Text>
+      </TouchableOpacity>
+      {submitted ? <Text style={styles.text}>Hello {name}</Text> : null}
+    </View>
 
   );
 };
@@ -120,37 +62,36 @@ const App = () => {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: '#ffffff',
-  },
-
-  header: {
-    borderColor: '#000',
-    borderWidth: 2,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#00f0f0',
   },
 
-  text_header: {
+  text: {
     color: '#000000',
-    fontSize: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontSize: 20,
     margin: 10,
   },
 
-  item: {
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  input: {
+    width: 200,
+    borderWidth: 1,
+    borderColor: '#555',
+    borderRadius: 10,
+    textAlign: 'center',
+    fontSize: 20,
+    marginBottom: 10,
   },
 
-  text_item: {
-    fontSize: 25,
-    color: '#000',
-    margin: 5,
-  },
+  button: {
+    width: 150,
+    height: 50,
+    backgroundColor: '#008080',
+    color: '#ffffff',
+    alignItems: 'center',
+    fontSize: 20,
+    borderRadius: 2,
+  }
+
 });
 
 
