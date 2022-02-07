@@ -14,6 +14,8 @@ import {
   SectionList,
   TextInput,
   TouchableOpacity,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 
 
@@ -24,7 +26,16 @@ const App = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const onClickHandler = () => {
-    setSubmitted(!submitted);
+    if (name.length > 3) {
+      setSubmitted(!submitted);
+    } else {
+      // Alert.alert('Warning!', 'Please enter a name longer than 3 characters', [
+      //   { text: 'Do not show again', onPress: () => console.log('Don\'t show me this again Pressed'), style: 'cancel' },
+      //   { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+      //   { text: 'OK', onPress: () => console.log('OK Pressed') },
+      // ], { cancelable: true, onDismiss: () => console.log('dismissed') });
+      ToastAndroid.show('Please enter a name longer than 3 characters', ToastAndroid.SHORT);
+    }
   }
 
   return (
@@ -46,8 +57,8 @@ const App = () => {
         color='#008080'
       /> */}
       <TouchableOpacity
-      style={styles.button}
-      onPress={onClickHandler}
+        style={styles.button}
+        onPress={onClickHandler}
       >
         <Text style={styles.text}>
           {submitted ? 'Clear' : 'Submit'}
