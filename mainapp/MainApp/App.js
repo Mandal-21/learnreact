@@ -33,30 +33,19 @@ const App = () => {
     { 'name': '0' },
   ]);
 
-  const DATA = [
+  const [DATA, setDATA] = useState([
     {
       title: 'Title 1',
-      data: ['Item 1-1', 'Item 1-2', 'Item 1-3'],
+      data: ['Item 1-1', 'Item 1-2'],
     },
-    {
-      title: 'Title 2',
-      data: ['Item 2-1', 'Item 2-2', 'Item 2-3'],
-    },
-    {
-      title: 'Title 3',
-      data: ['Item 3-1', 'Item 3-2'],
-    },
-    {
-      title: 'Title 4',
-      data: ['Item 4-1'],
-    },
-  ]
+  ])
 
   const [Refreshing, setRefreshing] = useState(false);
 
   const onRefresh = () => {
     setRefreshing(true);
-    setItems([...items, { 'name': 34 }]);
+    const adding_index = DATA.length + 1;
+    setDATA([...DATA, { title: 'Title ' + adding_index.toString(), data: ['Item ' + adding_index.toString() + '-1', 'Item ' + adding_index.toString() + '-2'] }]);
     setRefreshing(false);
   };
 
@@ -65,13 +54,23 @@ const App = () => {
     <SectionList
       keyExtractor={(item, index) => index.toString()}
       sections={DATA}
-      renderItem={({ item }) => <Text style={styles.text}>{item}</Text>}
-      renderSectionHeader={({ section }) => (
+      renderItem={({ item }) =>
         <View style={styles.item}>
-          <Text style={styles.text}>Item {section.title}</Text>
+          <Text style={styles.text_item}>{item}</Text>
+        </View >
+      }
+      renderSectionHeader={({ section }) => (
+        <View style={styles.header}>
+          <Text style={styles.text_header}>{section.title}</Text>
         </View>
       )}
-
+      refreshControl={
+        <RefreshControl
+          refreshing={Refreshing}
+          onRefresh={onRefresh}
+          colors={['#0e2']}
+        />
+      }
     />
 
     // <FlatList
@@ -87,7 +86,7 @@ const App = () => {
     //   refreshControl={
     //     <RefreshControl
     //       refreshing={Refreshing}
-    //       onRefresh={onRefresh}false
+    //       onRefresh={onRefresh}
     //       colors={['#0e2']}
     //     />
     //   }
@@ -125,18 +124,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 
-  item: {
-    margin: 10,
-    backgroundColor: '#00f0f0',
+  header: {
+    borderColor: '#000',
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#00f0f0',
   },
 
-  text: {
+  text_header: {
     color: '#000000',
     fontSize: 35,
-    fontStyle: 'italic',
+    alignItems: 'center',
+    justifyContent: 'center',
     margin: 10,
+  },
+
+  item: {
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  text_item: {
+    fontSize: 25,
+    color: '#000',
+    margin: 5,
   },
 });
 
