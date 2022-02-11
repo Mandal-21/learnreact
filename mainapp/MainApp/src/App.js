@@ -1,89 +1,59 @@
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ScreenA from './ScreenA';
+import ScreenB from './screenB';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 // NAVIGATION
-const Stack = createStackNavigator();
-
-function ScreenA({navigation}) {
-
-  const onPressHandler = () => {
-    navigation.navigate('Screen_B')
-    // navigation.replace('Screen_B');
-  }
-
-  return (
-    <View style={styles.body}>
-      <Text style={styles.text}>Screen A</Text>
-      <Pressable
-      onPress={onPressHandler}
-      style={({pressed}) => ({backgroundColor: pressed ? '#ddd' : '#0f0'})}
-      >
-        <Text style={styles.text}>Go to Screen B</Text>
-      </Pressable>
-    </View>
-  )
-}
-
-function ScreenB({navigation}) {
-
-  const onPressHandler = () => {
-    // navigation.navigate('Screen_A')
-    navigation.goBack();
-  }
-
-  return (
-    <View style={styles.body}>
-      <Text style={styles.text}>Screen B</Text>
-      <Pressable
-      onPress={onPressHandler}
-      style={({pressed}) => ({backgroundColor: pressed ? '#ddd' : '#ff0'})}
-      >
-        <Text style={styles.text}>Go to Screen A</Text>
-      </Pressable>
-    </View>
-  )
-}
+const Tab = createBottomTabNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator 
-      // screenOptions={{
-      //   header: () => null
-      // }}
-      >
-        <Stack.Screen
-        options={({navigation}) => ({
-          header: () => null
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, size, color }) => {
+
+            let iconName;
+            size = focused ? 25: 20;
+            // color = focused ? '#f0f' : '#ddd';
+
+            if (route.name === 'Screen_A') {
+              iconName = 'autoprefixer';
+
+            } else if (route.name === 'Screen_B') {
+              iconName = 'btc';
+
+            } return (
+              <FontAwesome5
+                name={iconName}
+                size={size}
+                color={color}
+              />
+            )
+          },
+          tabBarActiveTintColor: '#f0f',
+          tabBarInactiveTintColor: '#555',
+          tabBarInactiveBackgroundColor: '#999',
+
         })}
+
+
+      >
+        <Tab.Screen
           name="Screen_A"
-          component={ScreenA} />
-        <Stack.Screen
+          component={ScreenA}
+          options={{tabBarBadge: 3}}
+           />
+        <Tab.Screen
           name="Screen_B"
           component={ScreenB} />
-      </Stack.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
   )
 }
 
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    margin: 10,
-  }
-});
+
 
 export default App;
