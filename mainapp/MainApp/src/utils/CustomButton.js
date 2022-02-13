@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 
-const AmarButton = (props) => {
+const CustomButton = (props) => {
     return (
         <Pressable
             onPress={props.onPressFunction}
@@ -39,7 +39,9 @@ const styles = StyleSheet.create({
         width: 150,
         height: 50,
         alignItems: 'center',
+        borderRadius: 5,
+        margin: 10,
     },
 });
 
-export default AmarButton
+export default CustomButton

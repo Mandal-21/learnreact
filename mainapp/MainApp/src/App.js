@@ -1,61 +1,41 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import ScreenA from './ScreenA';
-import ScreenB from './ScreenB';
+import Home from './screens/Home';
+import Login from './screens/Login';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 // NAVIGATION
 // const Tab = createBottomTabNavigator();
 // const Tab = createMaterialBottomTabNavigator();
 // const Tab = createMaterialTopTabNavigator();
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 
 
 function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator
-        screenOptions={({ route }) => ({
-          drawerPosition: 'left',
-          headerTitle: 'Amar.native',
-          headerTitleAlign: 'center',
-          headerTitleStyle: { color: '#00ff', fontWeight: 'bold', fontSize: 25 },
-          headerStyle: { backgroundColor: '#0f0', },
-        })}
+      <Stack.Navigator
+        initialRouteName="Login"
+        
 
       >
-        <Drawer.Screen
-          name="Screen_A"
-          component={ScreenA}
+        <Stack.Screen
+          name="Login"
+          component={Login}
           options={{
-            title: 'Screen_A Title',
-            drawerIcon: ({ focused }) => (
-              <FontAwesome5
-                name="autoprefixer"
-                size={focused ? 25 : 20}
-                color={focused? '#0fff' : '#555'}
-              />
-            )
+            headerShown: false,
           }}
 
         />
-        <Drawer.Screen
-          name="Screen_B"
-          component={ScreenB}
-          options={{
-            title: 'Screen_B Title',
-            drawerIcon: ({ focused }) => (
-              <FontAwesome5
-                name="btc"
-                size={focused ? 25 : 20}
-                color={focused? '#0fff' : '#555'}
-              />)
-          }}
+        <Stack.Screen
+          name="Home"
+          component={Home}
         />
-      </Drawer.Navigator>
+
+      </Stack.Navigator>
     </NavigationContainer>
   )
 }
