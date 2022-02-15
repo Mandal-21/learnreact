@@ -9,11 +9,12 @@ import {
 } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FlatList, TextInput } from 'react-native-gesture-handler';
+import { FlatList, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import CustomButton from '../utils/CustomButton';
 import SQLite from "react-native-sqlite-storage";
 import { useSelector, useDispatch } from 'react-redux';
 import { setName, setAge, setIncrementAge, getCities } from '../redux/actions';
+import PushNotification from "react-native-push-notification";
 
 const db = SQLite.openDatabase(
     {
@@ -39,6 +40,31 @@ export default function Home({ navigation, route }) {
         getData(),
             dispatch(getCities())
     }, [])
+
+    const handleNotification = (item, index) => {
+
+        PushNotification.cancelAllLocalNotifications();
+
+        PushNotification.localNotification({
+            channelId: "test-channel",
+            title: "You clicked on " + item.country,
+            message: item.city,
+            bigText: item.city + " is the capital of " + item.country,
+            color: "red",
+            id: index,
+        })
+
+        PushNotification.localNotificationSchedule({
+            channelId: "test-channel",
+            title: "You clicked on " + item.country,
+            message: item.city,
+            bigText: "You clicked 20s ago on " + item.country,
+            color: "red",
+            id: index,
+            date: new Date(Date.now() + 20 * 1000 ),
+            allowWhileIdle: true,
+        })
+    }
 
     const getData = () => {
         try {
@@ -149,15 +175,19 @@ export default function Home({ navigation, route }) {
 
             <FlatList
                 data={cities}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
+                renderItem={({ item, index }) => (
+                    <TouchableOpacity 
+                    onPress = {() => handleNotification(item, index)}
+                    >
+                        <View style={styles.item}>
                             <Text style={styles.title}>{item.country}</Text>
                             <Text style={styles.subtitle}>{item.city}</Text>
-                    </View>
-
+                        </View>
+                    </TouchableOpacity>
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
+
         </View>
     )
 }

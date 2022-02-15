@@ -12,6 +12,7 @@ import CustomButton from '../utils/CustomButton';
 import SQLite from 'react-native-sqlite-storage';
 import { useSelector, useDispatch } from 'react-redux';
 import { setName, setAge } from '../redux/actions';
+import PushNotification from "react-native-push-notification";
 
 const db = SQLite.openDatabase(
     {
@@ -33,6 +34,7 @@ export default function Login({ navigation }) {
     useEffect(() => {
         createTable();
         getData();
+        createChannels();
     }, []);
 
     const createTable = () => {
@@ -43,6 +45,15 @@ export default function Login({ navigation }) {
                 + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Age INTEGER);"
             )
         })
+    }
+
+    const createChannels = () => {
+        PushNotification.createChannel(
+            {
+                channelId: "test-channel",
+                channelName: "Test channel",
+            }
+        )
     }
 
     const getData = () => {
