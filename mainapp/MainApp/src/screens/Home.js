@@ -8,34 +8,66 @@ import {
     Alert
 } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TextInput } from 'react-native-gesture-handler';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList, TextInput } from 'react-native-gesture-handler';
 import CustomButton from '../utils/CustomButton';
+import SQLite from "react-native-sqlite-storage";
+import { useSelector, useDispatch } from 'react-redux';
+import { setName, setAge, setIncrementAge, getCities } from '../redux/actions';
+
+const db = SQLite.openDatabase(
+    {
+        name: "MainDB",
+        location: "default",
+    },
+    () => { },
+    error => {
+        console.log("error", error);
+    }
+);
 
 export default function Home({ navigation, route }) {
 
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
+    const { name, age, cities } = useSelector((state) => state.userReducer);
+    const dispatch = useDispatch();
+
+    // const [name, setName] = useState('');
+    // const [age, setAge] = useState('');
 
 
     useEffect(() => {
-        getData()
+        getData(),
+            dispatch(getCities())
     }, [])
 
     const getData = () => {
         try {
-            AsyncStorage.getItem('UserData')
-                .then((value) => {
-                    if (value !== null) {
-                        let user = JSON.parse(value);
-                        setName(user.Name);
-                        setAge(user.Age);
+            // AsyncStorage.getItem('UserData')
+            //     .then(value => {
+            //         if (value != null) {
+            //             let user = JSON.parse(value);
+            //             setName(user.Name);
+            //             setAge(user.Age);
+            //         }
+            //     })
+            db.transaction((tx) => {
+                tx.executeSql(
+                    "SELECT Name, Age FROM Users",
+                    [],
+                    (tx, results) => {
+                        var len = results.rows.length;
+                        if (len > 0) {
+                            var userName = results.rows.item(0).Name;
+                            var userAge = results.rows.item(0).Age;
+                            dispatch(setName(userName));
+                            dispatch(setAge(userAge));
+                        }
                     }
-                });
+                )
+            })
         } catch (error) {
             console.log(error);
         }
-
     }
 
     const updateData = async () => {
@@ -43,11 +75,18 @@ export default function Home({ navigation, route }) {
             Alert.alert('Warning', 'Please enter your name')
         } else {
             try {
-                var user = {
-                    Name: name,
-                }
-                await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
-                Alert.alert('Success', 'Your name has been saved')
+                // var user = {
+                //     Name: name,
+                // }
+                // await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
+                // Alert.alert('Success', 'Your name has been saved')
+                db.transaction((tx) => {
+                    tx.executeSql(
+                        "UPDATE Users SET Name = ?",
+                        [name],
+                        () => { Alert.alert('Success', 'Your name has been saved') }
+                    )
+                })
             } catch (error) {
                 console.log(error);
             }
@@ -57,8 +96,15 @@ export default function Home({ navigation, route }) {
     const removeData = async () => {
         try {
             // await AsyncStorage.removeItem('UserName');
-            await AsyncStorage.clear();
-            navigation.navigate('Login')
+            // await AsyncStorage.clear();
+            db.transaction((tx) => {
+                tx.executeSql(
+                    "DELETE FROM Users;",
+                    [],
+                    () => { navigation.navigate('Login') }
+                )
+            })
+
         } catch (error) {
             console.log(error);
         }
@@ -73,7 +119,7 @@ export default function Home({ navigation, route }) {
             >
                 Welcome {name} !
             </Text>
-            <Text style={[
+            {/* <Text style={[
                 GlobalStyle.CustomFont,
                 styles.text]}
             >
@@ -83,7 +129,7 @@ export default function Home({ navigation, route }) {
                 style={styles.input}
                 placeholder='Enter your name'
                 value={name}
-                onChangeText={(value) => setName(value)}
+                onChangeText={(value) => dispatch(setName(value))}
             />
             <CustomButton
                 title='Update'
@@ -94,6 +140,23 @@ export default function Home({ navigation, route }) {
                 title='Remove'
                 color='#f40'
                 onPressFunction={removeData}
+            />
+            <CustomButton
+                title='AgeIncrement'
+                color='#f0f'
+                onPressFunction={() => dispatch(setIncrementAge())}
+            /> */}
+
+            <FlatList
+                data={cities}
+                renderItem={({ item }) => (
+                    <View style={styles.item}>
+                            <Text style={styles.title}>{item.country}</Text>
+                            <Text style={styles.subtitle}>{item.city}</Text>
+                    </View>
+
+                )}
+                keyExtractor={(item, index) => index.toString()}
             />
         </View>
     )
@@ -118,5 +181,25 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 130,
         marginBottom: 20,
+    },
+    item: {
+        backgroundColor: '#f9c2ff',
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: '#cccccc',
+        margin: 7,
+        width: 350,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    },
+    title: {
+        fontSize: 30,
+        margin: 10,
+    },
+    subtitle: {
+        fontSize: 20,
+        margin: 10,
+        color: '#999999'
     }
 });
