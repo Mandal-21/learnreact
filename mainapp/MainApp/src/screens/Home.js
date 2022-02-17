@@ -8,7 +8,6 @@ import {
     Alert
 } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import CustomButton from '../utils/CustomButton';
 import SQLite from "react-native-sqlite-storage";
@@ -61,7 +60,7 @@ export default function Home({ navigation, route }) {
             bigText: "You clicked 20s ago on " + item.country,
             color: "red",
             id: index,
-            date: new Date(Date.now() + 20 * 1000 ),
+            date: new Date(Date.now() + 20 * 1000),
             allowWhileIdle: true,
         })
     }
@@ -145,6 +144,12 @@ export default function Home({ navigation, route }) {
             >
                 Welcome {name} !
             </Text>
+            <CustomButton
+                title="Open Camera"
+                color="#00ff00"
+                onPressFunction={() => navigation.navigate('Camera')}
+            />
+
             {/* <Text style={[
                 GlobalStyle.CustomFont,
                 styles.text]}
@@ -176,8 +181,15 @@ export default function Home({ navigation, route }) {
             <FlatList
                 data={cities}
                 renderItem={({ item, index }) => (
-                    <TouchableOpacity 
-                    onPress = {() => handleNotification(item, index)}
+                    <TouchableOpacity
+                        onPress={() => {
+                            handleNotification(item, index);
+                            // navigation.navigate('Map', {
+                            //     lat: item.lat,
+                            //     lng: item.lng,
+                            //     city: item.city,
+                            // });
+                        }}
                     >
                         <View style={styles.item}>
                             <Text style={styles.title}>{item.country}</Text>

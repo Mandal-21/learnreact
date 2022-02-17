@@ -4,9 +4,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './screens/Home';
 import Login from './screens/Login';
+import Map from './screens/Map';
+import Camera from './screens/Camera';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Provider } from 'react-redux';
 import { Store } from './redux/store';
+
 
 // NAVIGATION
 // const Tab = createBottomTabNavigator();
@@ -22,8 +25,6 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Login"
-
-
         >
           <Stack.Screen
             name="Login"
@@ -37,7 +38,14 @@ function App() {
             name="Home"
             component={Home}
           />
-
+          <Stack.Screen
+            name="Map"
+            component={Map}
+          />
+          <Stack.Screen
+            name="Camera"
+            component={Camera}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
