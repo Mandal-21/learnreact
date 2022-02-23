@@ -2,31 +2,44 @@ import React from 'react';
 import {
     View,
     StyleSheet,
+    Alert,
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useCamera } from 'react-native-camera-hooks';
 import CustomButton from '../utils/CustomButton';
-import RNFS from 'react-native-fs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTasks, setTaskID } from '../redux/actions';
 
-export default function Camera() {
+export default function Camera({ navigation, route }) {
 
     const [{ cameraRef }, { takePicture }] = useCamera(null);
+    const { tasks, taskID } = useSelector(state => state.taskReducer);
+    const dispatch = useDispatch();
 
     const captureHandle = async () => {
         try {
             const data = await takePicture();
             const filePath = data.uri
-            console.log(data.uri);
-            const newFilePath = RNFS.ExternalDirectoryPath + "/MyImage.jpg"
-            RNFS.moveFile(filePath, newFilePath)
-                .then(() => {
-                    console.log("IMAGE  moved " + filePath + "--to--" + newFilePath)
-                })
-                .catch(error => console.log(error))
-
-
+            updateTask(route.params.id, filePath);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    const updateTask = (id, path) => {
+        const index = tasks.findIndex(task => task.ID === id);
+        let newTasks = [];
+        if (index > -1) {
+            newTasks = [...tasks];
+            newTasks[index].Image = path;
+            AsyncStorage.setItem('Tasks', JSON.stringify(newTasks))
+                .then(() => {
+                    dispatch(setTasks(newTasks));
+                    Alert.alert("Sucess!", "Task image is saved!");
+                    navigation.goBack();
+                })
+                .catch(err => console.log(err));
         }
     }
 

@@ -1,34 +1,23 @@
 const initialState = {
-    name: '',
-    age: 0,
-    cities: []
+    tasks: [],
+    taskID: 0,
 }
 
-const userReducer = (state = initialState, action) => {
+const taskReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_NAME':
+        case 'SET_TASKS':
             return {
                 ...state,
-                name: action.payload
+                tasks: action.payload
             }
-        case 'SET_AGE':
+        case 'SET_TASK_ID':
             return {
                 ...state,
-                age: action.payload
-            }
-        case 'SET_INCREMENT_AGE':
-            return {
-                ...state,
-                age: state.age + 1
-            }
-        case 'GET_CITIES':
-            return {
-                ...state,
-                cities: action.payload
+                taskID: action.payload
             }
         default:
             return state;
     }
 }
 
-export default userReducer;
+export default taskReducer;
